@@ -32,25 +32,21 @@ newaction {
 }
 
 function m.generateWorkspace(wks)
-    m.generateAllToolsets(wks)
+    m.generateAllConfigs(wks)
     for prj in p.workspace.eachproject(wks) do
         p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(prj, ".bff")))
-
-        for cfg in p.project.eachconfig(prj) do
-            print("Toolset", inspect(p.config.toolset(cfg)))
-		end
-
     end
 end
 
-function m.generateAllToolsets(wks)
-
-    --local toolsets = m.map(p.workspace.eachproject(wks), 
-    p.generate(wks, ".toolset.bff", m.generateToolset)
-    p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(wks, ".toolset.bff")))
+function m.generateAllConfigs(wks)
+    for cfg in p.workspace.eachconfig(wks) do
+        local cfgName = cfg.buildcfg
+        p.generate(wks, cfgName..".config.bff", m.generateConfig)
+        p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(wks, cfgName..".config.bff")))
+    end
 end
 
-function m.generateToolset(wks)
+function m.generateConfig(cfg)
     p.w('Coucou les amis')
 end
 

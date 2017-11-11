@@ -3,6 +3,7 @@ require "fbuild"
 
 workspace "MyWorkspace"
 	configurations { "Debug", "Release" }
+    location "build"
 
 project "MyProject"
     kind "ConsoleApp"

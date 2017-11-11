@@ -1,3 +1,5 @@
+local inspect = require("inspect")
+
 premake.modules.fbuild  = {}
 local m = premake.modules.fbuild
 local p = premake
@@ -5,6 +7,8 @@ local p = premake
 newaction {
     trigger = "fbuild",
     description = "Export to FastBuild format",
+
+    toolset = "lol",
 
     onStart = function()
         p.indent("  ")
@@ -28,11 +32,22 @@ newaction {
 }
 
 function m.generateWorkspace(wks)
-    p.generate(wks, ".toolset.bff", m.generateToolset)
-    p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(wks, ".toolset.bff")))
+    m.generateAllToolsets(wks)
     for prj in p.workspace.eachproject(wks) do
         p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(prj, ".bff")))
+
+        for cfg in p.project.eachconfig(prj) do
+            print("Toolset", inspect(p.config.toolset(cfg)))
+		end
+
     end
+end
+
+function m.generateAllToolsets(wks)
+
+    --local toolsets = m.map(p.workspace.eachproject(wks), 
+    p.generate(wks, ".toolset.bff", m.generateToolset)
+    p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(wks, ".toolset.bff")))
 end
 
 function m.generateToolset(wks)
@@ -45,6 +60,14 @@ end
 function m.esc(value)
     value = value:gsub('\\', '\\\\')
     value = value:gsub('"', '"\\"')
+end
+
+function m.map(func, array)
+  local new_array = {}
+  for i,v in ipairs(array) do
+    new_array[i] = func(v)
+  end
+  return new_array
 end
 
 return m

@@ -9,6 +9,7 @@ project "MyProject"
     kind "ConsoleApp"
     language "C"
     targetdir "bin/%{cfg.buildcfg}"
+    toolset "msc"
 
     files { "**.h", "**.c" }
 

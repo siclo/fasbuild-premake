@@ -28,9 +28,15 @@ newaction {
 }
 
 function m.generateWorkspace(wks)
+    p.generate(wks, ".toolset.bff", m.generateToolset)
+    p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(wks, ".toolset.bff")))
     for prj in p.workspace.eachproject(wks) do
-        p.x('#include "%s"', prj.name)
+        p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(prj, ".bff")))
     end
+end
+
+function m.generateToolset(wks)
+    p.w('Coucou les amis')
 end
 
 function m.generateProject(prj)

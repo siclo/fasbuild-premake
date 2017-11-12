@@ -4,16 +4,6 @@ premake.modules.fbuild  = {}
 local m = premake.modules.fbuild
 local p = premake
 
-p.api.register {
-    name = "lol",
-    scope = "project",
-    kind = "string",
-    allowed =  {
-        "msc",
-        "icc"
-    }
-}
-
 newaction {
     trigger = "fbuild",
     description = "Export to FastBuild format",
@@ -51,7 +41,6 @@ end
 function m.generateAllConfigs(wks)
     for cfg in p.workspace.eachconfig(wks) do
         local tool, version = p.config.toolset(cfg)
-        print("version", cfg.lol)
         local toolsetName = cfg.toolset or ""
         print(toolset, inspect(toolsetName))
         local cfgName = cfg.buildcfg.."_"..toolsetName
@@ -60,7 +49,7 @@ function m.generateAllConfigs(wks)
     end
     for prj in p.workspace.eachproject(wks) do
         for cfg in p.project.eachconfig(prj) do
-            print("Project", cfg.lol, cfg.buildcfg, cfg.platform)
+            print("Project", cfg.toolset, cfg.buildcfg, cfg.platform)
         end
     end
 end

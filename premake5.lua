@@ -5,13 +5,13 @@ workspace "MyWorkspace"
 	configurations { "Debug", "Release" }
     platforms { "win32", "x64" }
     location "build"
-    --lol "msc"
+    --toolset "msc"
 
 project "MyProject"
     kind "ConsoleApp"
     language "C"
     targetdir "bin/%{cfg.buildcfg}"
-    lol "icc"
+    toolset "gcc"
 
     files { "**.h", "**.c" }
 
@@ -27,7 +27,7 @@ project "MyProject2"
     kind "ConsoleApp"
     language "C"
     targetdir "bin/%{cfg.buildcfg}"
-    lol "icc"
+    toolset "gcc"
 
     files { "**.h", "**.c" }
 
@@ -43,7 +43,7 @@ project "MyProjectICC"
     kind "ConsoleApp"
     language "C"
     targetdir "bin/%{cfg.buildcfg}"
-    lol "msc"
+    toolset "msc"
 
     files { "**.h", "**.c" }
 

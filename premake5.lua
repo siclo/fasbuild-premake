@@ -3,7 +3,7 @@ require "fbuild"
 
 workspace "MyWorkspace"
 	configurations { "Debug", "Release" }
-    platforms { "win32", "x64" }
+    platforms { "x86", "x64" }
     location "build"
     --toolset "msc"
 

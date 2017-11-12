@@ -32,26 +32,28 @@ newaction {
 }
 
 function m.generateWorkspace(wks)
-    m.generateAllConfigs(wks)
+    m.generateAllCompilers(wks)
     for prj in p.workspace.eachproject(wks) do
         p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(prj, ".bff")))
     end
 end
 
-function m.generateAllConfigs(wks)
-    for cfg in p.workspace.eachconfig(wks) do
-        local tool, version = p.config.toolset(cfg)
-        local toolsetName = cfg.toolset or ""
-        print(toolset, inspect(toolsetName))
-        local cfgName = cfg.buildcfg.."_"..toolsetName
-        p.generate(wks, cfgName..".config.bff", m.generateConfig)
-        p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(wks, cfgName..".config.bff")))
+function m.generateAllCompilers(wks)
+    for compilerName, compiler in pairs(m.listCompilers(wks)) do
+        print(compilerName, inspect(compiler))
     end
+end
+
+function m.listCompilers(wks)
+    local compilers = {}
     for prj in p.workspace.eachproject(wks) do
         for cfg in p.project.eachconfig(prj) do
-            print("Project", cfg.toolset, cfg.buildcfg, cfg.platform, cfg.architecture)
+            local compilerName = cfg.toolset .. "_" .. cfg.architecture
+            compilers[compilerName] = { toolset = cfg.toolset,
+                architecture = cfg.architecture }
         end
     end
+    return compilers
 end
 
 function m.generateConfig(cfg)

@@ -40,7 +40,13 @@ end
 
 function m.generateAllCompilers(wks)
     for compilerName, compiler in pairs(m.listCompilers(wks)) do
-        print(compilerName, inspect(compiler))
+        local generator = m.compilerGenerators[compilerName]
+        if generator then
+            p.generate(wks, compilerName..".compiler.bff", generator)
+            p.x('#include "%s"', p.workspace.getrelative(wks, p.filename(wks, compilerName..".compiler.bff")))
+        else
+            error("Unknown compiler: " .. compilerName)
+        end
     end
 end
 
@@ -48,7 +54,7 @@ function m.listCompilers(wks)
     local compilers = {}
     for prj in p.workspace.eachproject(wks) do
         for cfg in p.project.eachconfig(prj) do
-            local compilerName = cfg.toolset .. "_" .. cfg.architecture
+            local compilerName = m.trim(cfg.toolset .. "_" .. cfg.architecture)
             compilers[compilerName] = { toolset = cfg.toolset,
                 architecture = cfg.architecture }
         end
@@ -56,9 +62,19 @@ function m.listCompilers(wks)
     return compilers
 end
 
-function m.generateConfig(cfg)
-    p.w('Coucou les amis')
+function m.generateCompiler_msc_x86(cfg)
+    p.w('Coucou les amis x86')
 end
+
+function m.generateCompiler_msc_x86_64(cfg)
+    p.w('Coucou les amis x64')
+end
+
+m.compilerGenerators =
+{
+    msc_x86 = m.generateCompiler_msc_x86,
+    msc_x86_64 = m.generateCompiler_msc_x86_64
+}
 
 function m.generateProject(prj)
 end
@@ -74,6 +90,10 @@ function m.map(func, array)
     new_array[i] = func(v)
   end
   return new_array
+end
+
+function m.trim(text)
+    return text:gsub("%s+", "")
 end
 
 return m

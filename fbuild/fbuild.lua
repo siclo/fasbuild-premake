@@ -49,7 +49,7 @@ function m.generateAllConfigs(wks)
     end
     for prj in p.workspace.eachproject(wks) do
         for cfg in p.project.eachconfig(prj) do
-            print("Project", cfg.toolset, cfg.buildcfg, cfg.platform)
+            print("Project", cfg.toolset, cfg.buildcfg, cfg.platform, cfg.architecture)
         end
     end
 end
